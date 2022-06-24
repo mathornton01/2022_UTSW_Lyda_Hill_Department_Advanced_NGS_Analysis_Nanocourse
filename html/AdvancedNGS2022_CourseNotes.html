@@ -1,0 +1,71 @@
+<body>
+
+<h1> Lyda Hill Department of Bioinformatics 2022 Advanced Next Generation Sequencing (NGS)</h1> 
+
+<h1> Nanocourse Session II/IV (NG RNA-Seq Analysis) Tutorial </h1>
+by Micah Andrew Thornton <br> 
+June 27-28, 2022 
+
+<hr>
+
+<h2> Session 2: RNA-Seq Analysis </h2>
+This document is intended to help guide participants in the 
+Lyda Hill Department of Bioinformatics Advanced (Next Generation Sequencing) 
+NGS Analysis 2022 Nanocourse.  <br> In particular this is a guided tutorial through
+which we will walk in the course while describing the installation of salmon and 
+kallisto, and their use in estimating the abundances of <br> gene transcripts present
+in a particular sample.  Please note that this session will go much more smoothly 
+if you are able to install and use the linux commandline on your personal computer. <br> 
+I am going to assume that you are able to follow along with these Linux commands, but if 
+you are not and need help accessing the commandline from your personal computer, <br> I recommend
+that you consult one of the following: <br> 
+
+<ul>
+    <li> For Running Linux Commandline Commands from Windows </li> 
+    <ul> 
+        <li> Install the Linux Simulator Cygwin -  <a href=https://www.cygwin.com/> https://www.cygwin.com/ </a>
+        <li> Install the Windows Subsystem for Linux - <a href=https://docs.microsoft.com/en-us/windows/wsl/about> https://docs.microsoft.com/en-us/windows/wsl/about</a> 
+    </ul>
+    <li> For Running Linux Commandline Utilities from Mac OSX </li> 
+    <ul> 
+        <li> Install the Homebrew Package Manager - <a href=https://brew.sh/> https://brew.sh/ </a> </li>
+        <li> Install the Macports Package Manager - <a href= https://www.macports.org/> https://www.macports.org/ </a> </li> 
+    </ul>
+    <li> To Run Linux Commandline Utilities in Linux, just open the Linux Terminal </li>
+</ul>
+
+The linux utilities have been used by countless researchers and scientists working at countless 
+institutions since they have been created. <br>  It is worth installing the above and learning 
+how to work with the linux utilities, as doing so will save you many hours of manual work in the 
+future. <br> 
+<h3> RNA-Seq Data </h3>
+RNA-Seq Data is slightly different in nature from DNA-Seq data. 
+The same format for presenting sequencing reads (FASTA) is used for both types of data, 
+however differential splicing <br> in transcripts render RNA-Seq reads unalignable to the same genetic reference from which they were initially transcribed, the DNA reference. <br> 
+DNA-Seq reads will present no difficulties in alignment to the same DNA reference, assuming that the reads are of a high enough quality, and not isolated to repetitive regions of the genome. <br> 
+
+
+<h3> Tools for read quantification </h3> 
+
+With the increased capability of Next Generation Sequencing technologies, it has become possible to very quickly produce many short sequencing reads from genetic sequences.<br>
+In some experiments it is necessary to 
+
+<h4>1. Kallisto </h4> 
+
+Kallisto is a tool developed by the Pachter Lab for "Near-Optimal RNA-Seq Quantification".  The source code is hosted by Github <a href=https://github.com/pachterlab/kallisto> here (https://github.com/pachterlab/kallisto) </a> <br>
+We will describe the process for the installation of Kallisto from scratch on your personal computer in this section. <br> 
+
+<ol>
+    <li> Ensure that you have the proper utilities for doing the installation. </li>
+    <ul>
+        <li> Git - A Source Code Version Control Management System (<a href=https://git-scm.com/download> install here (https://git-scm.com/download) </a>). </li>
+        <li> CMake - An open-source, cross-platform family of tools designed to build, test and package software <a href=https://cmake.org/download/> install here (https://cmake.org/download/) </a>). </li>
+        <li> Make - A buildsystem created by GNU which allows the utilization of standard Makefiles for describing the build process. (you will probably need to use a package manager to download this).</li>
+    </ul>
+    <li> Clone the Source Code from the Repository.<pre><code>git clone https://github.com/pachterlab/kallisto.git</code></pre></li>
+    <li> </li>
+</ol> 
+
+<h4>2. Salmon</h4>
+
+</body>
