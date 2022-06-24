@@ -38,6 +38,7 @@ The linux utilities have been used by countless researchers and scientists worki
 institutions since they have been created. <br>  It is worth installing the above and learning 
 how to work with the linux utilities, as doing so will save you many hours of manual work in the 
 future. <br> 
+
 <h3> RNA-Seq Data </h3>
 RNA-Seq Data is slightly different in nature from DNA-Seq data. 
 The same format for presenting sequencing reads (FASTA) is used for both types of data, 
@@ -50,9 +51,9 @@ DNA-Seq reads will present no difficulties in alignment to the same DNA referenc
 With the increased capability of Next Generation Sequencing technologies, it has become possible to very quickly produce many short sequencing reads from genetic sequences.<br>
 In some experiments it is necessary to 
 
-<h4>1. Kallisto </h4> 
+<h4>1. Installing Kallisto </h4> 
 
-Kallisto is a tool developed by the Pachter Lab for "Near-Optimal RNA-Seq Quantification".  The source code is hosted by Github <a href=https://github.com/pachterlab/kallisto> here (https://github.com/pachterlab/kallisto) </a> <br>
+Kallisto is a tool developed by the Pachter Lab for <a href=https://www.nature.com/articles/nbt.3519/> "Near-Optimal RNA-Seq Quantification" </a>.  The source code is hosted by Github <a href=https://github.com/pachterlab/kallisto> here (https://github.com/pachterlab/kallisto) </a> <br>
 We will describe the process for the installation of Kallisto from scratch on your personal computer in this section. <br> 
 
 <ol>
@@ -62,10 +63,41 @@ We will describe the process for the installation of Kallisto from scratch on yo
         <li> CMake - An open-source, cross-platform family of tools designed to build, test and package software <a href=https://cmake.org/download/> install here (https://cmake.org/download/) </a>). </li>
         <li> Make - A buildsystem created by GNU which allows the utilization of standard Makefiles for describing the build process. (you will probably need to use a package manager to download this).</li>
     </ul>
-    <li> Clone the Source Code from the Repository.<pre><code>git clone https://github.com/pachterlab/kallisto.git</code></pre></li>
-    <li> </li>
+    <li> Clone the Source Code from the Repository.<pre><code>git clone https://github.com/pachterlab/kallisto.git;</code></pre></li>
+    <li> Change directory to the newly downloaded 'kallisto' repository. <pre><code>cd kallisto;</pre></code></li>
+    <li> Make a build directory, and navigate into it <pre><code>mkdir build; cd build;</pre></code> </li>
+    <li> Run the Cmake utility, <pre><code>cmake ..;</code></pre></li> 
+    <li> Run 'Make' <pre><code>make;</code></pre>
 </ol> 
 
-<h4>2. Salmon</h4>
+After you have succesfully run these steps, you should have a compiled copy of the most recent version of the Kallisto software.  To verify this, navigate into the 
+<br> source directory from within the build directory and then run kallisto. 
+
+<pre><code>cd src; ./kallisto;</code></pre> 
+
+If the build was successful, then Kallisto will output the help and user information associated with running it. 
+
+<pre><code> kallisto 0.48.0
+
+Usage: kallisto &ltCMD&gt  [arguments] ..
+
+Where &ltCMD&gt can be one of:
+
+    index         Builds a kallisto index
+    quant         Runs the quantification algorithm
+    quant-tcc     Runs quantification on transcript-compatibility counts
+    bus           Generate BUS files for single-cell data
+    merge         Merges several batch runs
+    h5dump        Converts HDF5-formatted results to plaintext
+    inspect       Inspects and gives information about an index
+    version       Prints version information
+    cite          Prints citation information
+
+Running kallisto &ltCMD&gt without arguments prints usage information for &ltCMD&gt
+</code></pre>
+
+In the next few sections we will discuss the procedure of running Kallisto for a specific transcriptome, and analyzing and reporting the results. <br>
+However, immediately, a discussion of the installation of a seperate application for transcript abundance estimation, Salmon, is described. <nr>
+<h4>2. Installing Salmon</h4>
 
 </body>
