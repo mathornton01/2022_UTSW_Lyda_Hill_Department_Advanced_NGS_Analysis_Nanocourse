@@ -1,0 +1,265 @@
+<body>
+
+<h1> Lyda Hill Department of Bioinformatics 2022 Advanced Next Generation Sequencing (NGS)</h1> 
+
+<h1> Nanocourse Day II Session IV (NG RNA-Seq Analysis) Tutorial (~ 2-2.5 hrs) </h1>
+by Micah Andrew Thornton <br> 
+June 27-28, 2022 <br> 
+Version 1.0 <br>
+
+<hr>
+
+<h2> Session 2: RNA-Seq Analysis </h2>
+This document is intended to help guide participants in the 
+Lyda Hill Department of Bioinformatics Advanced (Next Generation Sequencing) 
+NGS Analysis 2022 Nanocourse.  <br> In particular this is a guided tutorial through
+which we will walk in the course while describing the installation of salmon and 
+kallisto, and their use in estimating the abundances of <br> gene transcripts present
+in a particular sample.  Please note that this session will go much more smoothly 
+if you are able to install and use the linux commandline on your personal computer. <br> 
+I am going to assume that you are able to follow along with these Linux commands, but if 
+you are not and need help accessing the commandline from your personal computer, <br> I recommend
+that you consult one of the following: <br> 
+
+<ul>
+    <li> For Running Linux Commandline Commands from Windows </li> 
+    <ul> 
+        <li> Install the Linux Simulator Cygwin -  <a href=https://www.cygwin.com/> https://www.cygwin.com/ </a>
+        <li> Install the Windows Subsystem for Linux - <a href=https://docs.microsoft.com/en-us/windows/wsl/about> https://docs.microsoft.com/en-us/windows/wsl/about</a> 
+    </ul>
+    <li> For Running Linux Commandline Utilities from Mac OSX </li> 
+    <ul> 
+        <li> Install the Homebrew Package Manager - <a href=https://brew.sh/> https://brew.sh/ </a> </li>
+        <li> Install the Macports Package Manager - <a href= https://www.macports.org/> https://www.macports.org/ </a> </li> 
+    </ul>
+    <li> To Run Linux Commandline Utilities in Linux, just open the Linux Terminal </li>
+</ul>
+
+The linux utilities have been used by countless researchers and scientists working at countless 
+institutions since they have been created. <br>  It is worth installing the above and learning 
+how to work with the linux utilities, as doing so will save you many hours of manual work in the 
+future. <br> 
+
+<h3> RNA-Seq Data </h3>
+RNA-Seq Data is slightly different in nature from DNA-Seq data. 
+The same format for presenting sequencing reads (FASTA) is used for both types of data, 
+however differential splicing <br> in transcripts render RNA-Seq reads unalignable to the same genetic reference from which they were initially transcribed, the DNA reference. <br> 
+DNA-Seq reads will present no difficulties in alignment to the same DNA reference, assuming that the reads are of a high enough quality, and not isolated to repetitive regions of the genome. <br> 
+
+
+<h3> Tools for read quantification </h3> 
+
+Most tools for RNAseq read quantification are a two step procedure of 
+alignment or pseudo-alignment followed by expectation maximization. Two such 
+tools are Kallisto and Salmon.
+
+<h4>1. Installing Kallisto </h4> 
+
+Kallisto is a tool developed by the Pachter Lab for <a href=https://www.nature.com/articles/nbt.3519/> "Near-Optimal RNA-Seq Quantification" </a>.  The source code is hosted by Github <a href=https://github.com/pachterlab/kallisto> here (https://github.com/pachterlab/kallisto) </a> <br>
+We will describe the process for the installation of Kallisto from scratch on your personal computer in this section. <br> 
+
+<ol>
+    <li> Ensure that you have the proper utilities for doing the installation. </li>
+    <ul>
+        <li> Git - A Source Code Version Control Management System (<a href=https://git-scm.com/download> install here (https://git-scm.com/download) </a>). </li>
+        <li> CMake - An open-source, cross-platform family of tools designed to build, test and package software <a href=https://cmake.org/download/> install here (https://cmake.org/download/) </a>). </li>
+        <li> Make - A buildsystem created by GNU which allows the utilization of standard Makefiles for describing the build process. (you will probably need to use a package manager to download this).</li>
+    </ul>
+    <li> Clone the Source Code from the Repository.<pre><code>git clone https://github.com/pachterlab/kallisto.git;</code></pre></li>
+    <li> Change directory to the newly downloaded 'kallisto' repository. <pre><code>cd kallisto;</pre></code></li>
+    <li> Make a build directory, and navigate into it <pre><code>mkdir build; cd build;</pre></code> </li>
+    <li> Run the Cmake utility, <pre><code>cmake ..;</code></pre></li> 
+    <li> Run 'Make' <pre><code>make;</code></pre>
+</ol> 
+
+After you have succesfully run these steps, you should have a compiled copy of the most recent version of the Kallisto software.  To verify this, navigate into the 
+<br> source directory from within the build directory and then run kallisto. 
+
+<pre><code>cd src; ./kallisto;</code></pre> 
+
+If the build was successful, then Kallisto will output the help and user information associated with running it. 
+
+<pre><code> kallisto 0.48.0
+
+Usage: kallisto &ltCMD&gt  [arguments] ..
+
+Where &ltCMD&gt can be one of:
+
+    index         Builds a kallisto index
+    quant         Runs the quantification algorithm
+    quant-tcc     Runs quantification on transcript-compatibility counts
+    bus           Generate BUS files for single-cell data
+    merge         Merges several batch runs
+    h5dump        Converts HDF5-formatted results to plaintext
+    inspect       Inspects and gives information about an index
+    version       Prints version information
+    cite          Prints citation information
+
+Running kallisto &ltCMD&gt without arguments prints usage information for &ltCMD&gt
+</code></pre>
+
+In the next few sections we will discuss the procedure of running Kallisto for a specific transcriptome, and analyzing and reporting the results. <br>
+However, immediately, a discussion of the installation of a seperate application for transcript abundance estimation, Salmon, is described. <nr>
+<h4>2. Installing Salmon</h4>
+
+To get salmon, it is easier to install it using Anacondas package manager.  <br>
+Anaconda is a distribution of Python/R and some other tools for data science 
+and general research. <br> You can download The anaconda install script for linux 
+<a href=https://www.anaconda.com/products/distribution> here </a>. <br>
+Once Anaconda has been installed on your computer, we can use the conda package 
+manager in order to set up a salmon environment and install salmon through the 
+commandline with the following series of commands:
+
+<pre><code> conda config --add channels conda-forge </code></pre>
+<pre><code> conda config --add channels bioconda </code></pre>
+<pre><code> conda create -n salmon salmon </code></pre>
+
+Then to activate the salmon environment from Conda you use 
+
+<code><pre> conda activate salmon </pre></code>
+
+If the install was sucessful when you now type 
+
+<code><pre> salmon </pre></code>
+
+You should see the help message that is provided by Salmon as: 
+
+<code><pre> 
+
+salmon v1.9.0
+
+Usage:  salmon -h|--help or
+        salmon -v|--version or
+        salmon -c|--cite or
+        salmon [--no-version-check] <COMMAND> [-h | options]
+
+Commands:
+     index      : create a salmon index
+     quant      : quantify a sample
+     alevin     : single cell analysis
+     swim       : perform super-secret operation
+     quantmerge : merge multiple quantifications into a single file
+     
+     </pre></code>
+     
+If you are not able to install anaconda, then you can download binaries for 
+Salmon directly from the Salmon website, <a href=https://github.com/COMBINE-lab/salmon/releases> here </a>.
+<br>
+For the full tutorial on downloading, installing, and using Salmon from the 
+creators of the software (The COMBINE lab) please <a href=https://combine-lab.github.io/salmon/getting_started/#obtaining-salmon> see this link. </a>.
+
+
+
+<h3> Sample Transcriptome </h3> 
+
+For this example we will use data simulated from allele-specific 
+transcripts generated for six genes. <br>  The transcriptome itself does not 
+contain the allele-specific variants, but the simulated reads do. <br>  This is 
+to show that the pseudo-alignment approaches in kallisto and salmon are 
+able to assign  allele specific reads to the proper transcripts. <br> 
+
+The files we will use should have been distributed along with this tutorial. <br>
+These are generated using an internal simulator, and are simplified for the 
+sake of the tutorial. <br> 
+
+<ul> 
+    <li> Data/c22.425.txome.fa - The transcriptome fasta file </li>
+    <li> Data/c22.425_1.fa - First mate of 100,000 Simulated Allele-Specific RNA reads. </li>
+    <li> Data/c22.425_2.fa - Second mate of 100,000 Simulated Allele-Specific RNA reads. </li>
+    <li> Data/c22.425.stat - A meta-data file containing the true simulation information </li>
+</ul>
+
+
+
+<h4> Decoy-Aware Transcriptomes </h4>
+
+A 'Decoy-Aware' transcriptome has 'decoy' sequences which are not actual 
+RNA transcripts (and usually come from the originating genome).  <br> These 
+transcriptomes allow for spurious alignments to transcripts in the data
+and errant reads to be removed from the data. <br>  To build a decoy-aware transcriptome
+for Salmon, you can follow <a href=https://combine-lab.github.io/alevin-tutorial/2019/selective-alignment/> this tutorial </a>.
+
+<h4> Transcriptome Databases </h4> 
+
+There are several formats of transcriptome databases which exist, are available for download, and require minimal parsing to produce 
+a valid multi-FASTA transcriptome file. <br> 
+As previously stated, the transcriptomes are simply collections of transcript sequences for a set of genes within or without an organism. <br> 
+This means that sequences can simply be concatenated together into the same FASTA file to serve as a transcriptome. <br> 
+
+This might be particularly useful when working with data such as viral data. <br> 
+For instance, as one user of the <a href=https://bioinformatics.stackexchange.com/questions/14061/how-to-get-transcriptome-fasta-file-for-viruses-for-kallisto-pseudo-alignment> bioinformatics stackexchange noted </a> that he could follow <a href=https://www.biostars.org/p/386742> the advice here </a> to generate his own transcriptomes using the gffread tool. <br> 
+
+First make sure you have gffread installed, luckily we can do this through anaconda: 
+
+<code><pre>conda install -c bioconda gffread</pre></code>
+
+To get the transcriptome for an HIV virus for instance, apply the following commands (Download the sequence, the gene annotations, and then generate the transcriptome: 
+
+<code><pre>wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/864/765/GCF_000864765.1_ViralProj15476/GCF_000864765.1_ViralProj15476_genomic.fna.gz</pre></code>
+<code><pre>gunzip GCF_000864765.1_ViralProj15476_genomic.fna.gz</pre></code>
+<code><pre>wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/864/765/GCF_000864765.1_ViralProj15476/GCF_000864765.1_ViralProj15476_genomic.gff.gz</pre></code>
+<code><pre>gunzip GCF_000864765.1_ViralProj15476_genomic.gff.gz</pre></code>
+<code><pre>gffread -F -w transcriptome.fa -g GCF_000864765.1_ViralProj15476_genomic.fna GCF_000864765.1_ViralProj15476_genomic.gff </pre></code>
+
+In addition to the ability to produce your own transcripts using the gffread utility in the manner shown above, you can also download some pre-created transcriptomes. <br> 
+The formatting for these transcriptomes however is frequently inconsistent, and these will need to be parsed into the appropriate format prior to their use. <br> 
+Some such online repositories for transcriptome data are: 
+
+<ul> 
+    <li> <a href=https://www.ncbi.nlm.nih.gov/genbank/tsa/> https://www.ncbi.nlm.nih.gov/genbank/tsa/ </a></li>
+    <li> <a href=https://ngdc.cncb.ac.cn/> https://ngdc.cncb.ac.cn/ </a> </li>
+    <li> <a href=https://www.ncbi.nlm.nih.gov/genome/guide/mouse/MouseTranscriptome.html> https://www.ncbi.nlm.nih.gov/genome/guide/mouse/MouseTranscriptome.html </a> </li>
+</ul> 
+
+<h3> Preparing the Salmon and Kallisto indexes </h3>
+
+To prepare the colored De Brujin graph index for Kallisto, use the following command
+
+<code> <pre> kallisto index -i kal_idx ../Data/c22.425.txome.fa </pre></code> 
+
+To prepare the K-mer hash table and Suffix array (mashmap) index for Salmon: 
+
+<code> <pre> conda activate salmon </pre> </code> 
+<code> <pre> salmon index -i sal_idx -t ../Data/c22.425.txome.fa </pre></code>
+<code> <pre> conda deactivate </pre></code> 
+
+Finally we can now quantify with Salmon and Kallisto.
+
+<h3> Quantifying Reads with Salmon and Kallisto </h3> 
+
+To quantify reads using Salmon you can run the following: 
+
+<code> <pre> conda activate salmon </pre></code> 
+<code> <pre> salmon quant -i sal_idx \
+             -o sal_quant\
+             -l A\
+             -1 ../Data/c22.425_1.fa\
+             -2 ../Data/c22.425_2.fa
+</pre></code>
+<code> <pre> conda deactivate </pre></code>
+
+And to do the same with Kallisto run: 
+
+<code><pre> kallisto quant -i kal_idx \
+               -o kal_quant\
+               ../Data/c22.425_1.fa\
+               ../Data/c22.425_2.fa
+</pre></code> 
+
+<h3> Viewing the Quantification Results </h3> 
+
+To view the quantification results for salmon we must display the contents of the generated sailfish file: 
+
+<code> <pre> cat sal_quant/quant.sf </pre></code>
+
+and to view the results for kallisto, display the tab seperated value file produced: 
+
+<code> <pre> cat kal_quant/abundance.tsv </pre></code> 
+
+To see the .stat file (with the allele-specific true quantifications from the simulated data, use: 
+
+<code> <pre> cat ../Data/c22.425.stat </pre></code> 
+
+
+</body>
+
